@@ -8,14 +8,6 @@ def mean(array):
 		s += array[i]
 	return s / len(array)	
 
-
-def std(array):
-	avg = mean(array)
-	s = 0.
-	for i in range(len(array)):
-		s += (array[i] - avg)**2
-	return s / len(array)
-
 import numpy as np
 import time
 

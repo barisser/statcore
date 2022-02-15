@@ -12,11 +12,13 @@ cpdef double mean(array):
 
     return s / l
 
-
-cpdef double std(array):
+cpdef double variance(array):
+    cpdef double avg, s
     avg = mean(array)
-    s = 0.
-    
+    s = 0.0
     for i in range(len(array)):
         s += (array[i] - avg)**2
     return s / len(array)
+
+cpdef double std(array):
+    return variance(array)**0.5

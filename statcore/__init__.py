@@ -1,2 +1,4 @@
-import cfast as fast
-import statcore.main as main
+#import cfast as fast
+
+from cfast import mean, std
+#from .main import mean
