@@ -8,7 +8,7 @@ build: clean
 	python setup.py build_ext --inplace
 
 test: venv
-	python setup.py install && pytest -s --cov statcore --pdb tests
+	python setup.py install && pytest -s -vvv --pdb tests
 
 publish:
 	rm -rf dist && python setup.py sdist bdist_wheel && \

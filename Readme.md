@@ -7,3 +7,5 @@ This is purely for fun + education and should be used... at extreme personal ris
 
 I'm going to use numpy arrays and matrices, but implement most other algorithms
 and datastructures myself (for educational purposes only).
+
+The usage of cython and c_extensions is completely recreational.
