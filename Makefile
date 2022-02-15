@@ -1,5 +1,11 @@
+clean:
+	rm -rf build; rm -rf dist; rm -rf *.egg-info; rm -rf statcore/*.so;rm -rf statcore/*.c
+
 venv:
 	virtualenv venv && . venv/bin/activate && pip install setup.py
+
+build: clean
+	python setup.py build_ext --inplace
 
 test: venv
 	python setup.py install && pytest -s --cov statcore --pdb tests

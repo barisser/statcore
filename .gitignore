@@ -3,3 +3,7 @@ venv*
 *.egg-info*
 build*
 dist*
+*.c
+*pycache*
+*.so
+*.html

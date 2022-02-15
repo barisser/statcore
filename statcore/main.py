@@ -1,3 +1,4 @@
+import cfast as fast
 
 
 def mean(array):
@@ -8,27 +9,29 @@ def mean(array):
 	return s / len(array)	
 
 
+def std(array):
+	avg = mean(array)
+	s = 0.
+	for i in range(len(array)):
+		s += (array[i] - avg)**2
+	return s / len(array)
+
 import numpy as np
 import time
 
-a = np.random.random(100000)
+def speedtest(length):
+	a = np.random.random(length)
+	slowstart = time.time()
+	slowmean = std(a)
+	slowtime = time.time() - slowstart
 
-b = time.time()
-r = mean(a)
-z = time.time() - b
-print(z)
+	numpystart = time.time()
+	numpymean = a.std()
+	numpytime = time.time() - numpystart
 
-b = time.time()
-q = a.mean()
-w = time.time()-b
+	faststart = time.time()
+	fastmean = fast.std(a)
+	fasttime = time.time() - faststart
 
-print(w)
-print(z/w)
-
-import pdb;pdb.set_trace()
-
-# def std(array):
-# 	"""
-# 	Compute standard deviation.
-# 	"""
+	print("{} / 1 / {}".format(slowtime / numpytime, fasttime / numpytime))
 
