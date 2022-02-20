@@ -1,11 +1,11 @@
 #include "Python.h"
 
 long fastfactorial(long n){
- if(n<=1)
- return 1;
- else
- return n * fastfactorial(n-1);
-}
+  if(n<=1)
+  return 1;
+  else
+  return n * fastfactorial(n-1);
+
 
 
 static PyObject* factorial(PyObject* self, PyObject* args){
