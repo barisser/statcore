@@ -1,5 +1,5 @@
 clean:
-	rm -rf build; rm -rf dist; rm -rf *.egg-info; rm -rf statcore/*.so;rm -rf statcore/*.c
+	rm -rf build; rm -rf dist; rm -rf *.egg-info; rm -rf statcore/*.so;rm -rf statcore/*.c;rm -rf *.so
 
 venv:
 	virtualenv venv && . venv/bin/activate && pip install setup.py
