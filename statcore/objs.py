@@ -42,3 +42,28 @@ class Array(object):
 		for i in range(len(self.values)):
 			new_values.append(self.values[i] - other.values[i])
 		return Array(new_values)
+
+	def __mul__(self, other):
+		"""
+		Elementwise vector multiplication
+		"""
+		self.check_shapes(other)
+		new_values = []
+		for i in range(len(self.values)):
+			new_values.append(self.values[i] * other.values[i])
+		return Array(new_values)
+
+
+	def __truediv__(self, other):
+		"""
+		Elementwise vector division
+		"""
+		self.check_shapes(other)
+		return Array([self.values[i] / other.values[i] for i in range(len(self.values))])
+
+	def __mod__(self, other):
+		"""
+		Elementwise vector mod
+		"""
+		self.check_shapes(other)
+		return Array([self.values[i] % other.values[i] for i in range(len(self.values))])
