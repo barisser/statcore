@@ -2,4 +2,5 @@
 
 #from cfast import mean, std
 #from .main import dot, correlation, lr
-from .objs import Array
+from .array import Array
+from .tensor import get_shape_from_lists, Tensor, get_shape_from_keys
