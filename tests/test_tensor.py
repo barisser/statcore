@@ -28,6 +28,14 @@ def test_tensor():
 	data2[2][3][3][1] = -100
 	tensor2 = statcore.Tensor(data2)
 	tensor3 = tensor1 + 10
-	assert tensor3[2, 3, 3] == -90
-#	assert tensor3[]
-#	assert tensor3[2, 3, 4] == tensor1[2, 3, 4] + tensor2[2, 3, 4] == 10
+	assert tensor3[2, 3, 3, 1] == 12
+	assert isinstance(tensor3[1, 2], statcore.Tensor)
+	assert tensor3[2, 3].values[0] == [11, 12, 13]
+
+	tensor4 = -5 + 10 * tensor3
+	assert tensor4[2, 3, 3, 1] == 115
+	assert tensor1.mean() == 2
+	assert (tensor1 + 3).mean() == 5
+	assert tensor1.var() == 2./3
+	assert (tensor1 + 3).std() == 0.816496580927726
+	assert (10*tensor1).std() == 8.16496580927726

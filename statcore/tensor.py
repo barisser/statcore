@@ -23,6 +23,20 @@ def get_shape_from_lists(data):
 			# above should be fixed eventually.  Current check only goes to depth=1.
 	return tuple(shape)
 
+def tensor_list_to_dict(values, shape):
+	count = 1
+	for x in shape:
+		count *= x
+
+	data = {}
+	for i in range(count):
+		coord = []
+		for x in shape:
+			coord.append(i % x)
+			i -= i % x
+			i /= x
+		data[tuple(coord)] = v
+
 def get_shape_from_keys(keys):
 	dims = len(next(iter(keys)))
 	shape = [0] * dims
@@ -31,12 +45,22 @@ def get_shape_from_keys(keys):
 			shape[i] = max(shape[i], k[i] + 1)
 	return tuple(shape)
 
-
 def nested_list_lookup(llist, coords):
 	if len(coords) == 1:
 		return llist[coords[0]]
 	return nested_list_lookup(llist[coords[0]], coords[1:])
 
+def nested_list_modify(llist, key, value):
+	rets = []
+	for n, x in enumerate(llist):
+		if n != key[0]:
+			rets.append(x)
+		else:
+			if len(key) == 1:
+				rets.append(value)
+			else:
+				rets.append(nested_list_modify(x, key[1:], value))
+	return rets
 
 class Tensor(object):
 	def __init__(self, values=None):
@@ -47,7 +71,6 @@ class Tensor(object):
 			values = []
 		self.shape = get_shape_from_lists(values)
 		self.values = values
-#		self.values_map = tensor_list_to_dict(values, self.shape)
 
 	def check_shape_with_other(self, other):
 		if not self.shape == other.shape:
@@ -83,18 +106,59 @@ class Tensor(object):
 			for k in self.all_coords():
 				newtensor[k] = v1 + other[k]
 		elif isinstance(other, int) or isinstance(other, float):
+			newtensor = copy.deepcopy(self)
 			for k in self.all_coords():
-				self[k] = other + self[k]
+				newtensor[k] = newtensor[k] + other
 		return newtensor
 
 	def __radd__(self, other):
 		return self + other
 
+	def __mul__(self, other):
+		if isinstance(other, int) or isinstance(other, float):
+			newtensor = copy.deepcopy(self)
+			for k in self.all_coords():
+				newtensor[k] *= other
+			return newtensor
+		else:
+			raise ValueError("This type not yet accepted.")
+
+	def __rmul__(self, other):
+		return self * other
+
+	def __setitem__(self, k, v):
+		self.values = nested_list_modify(self.values, k, v)
+
 	def __getitem__(self, k):
 		if isinstance(k, int):
-			return self.values[k]
+			data = self.values[k]
+			if isinstance(data, int) or isinstance(data, float):
+				return data
+			else:
+				return Tensor(data)
 		elif isinstance(k, tuple):
-			return nested_list_lookup(self.values, k)
+			res = nested_list_lookup(self.values, k)
+			if isinstance(res, int) or isinstance(res, float):
+				return res
+			return Tensor(res)
 
-#	def __setitem__(self, k, v):
-#		if len(k) == len(self.shape):
+	def mean(self):
+		s = 0.
+		n = 0
+		for k in self.all_coords():
+			s += self[k]
+			n += 1
+		return s/n
+
+	def std(self):
+		return self.var() ** 0.5
+
+	def var(self):
+		s = 0.
+		n = 0.
+		avg = self.mean()
+		for k in self.all_coords():
+			s += (self[k] - avg)**2
+			n += 1
+		return s / n
+
