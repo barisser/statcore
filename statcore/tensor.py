@@ -73,6 +73,7 @@ class Tensor(object):
 		if values is None:
 			values = []
 		self.shape = get_shape_from_lists(values)
+		self.dims = len(self.shape)
 		self.values = values
 		self.num_elements = 1
 		for x in self.shape:
@@ -89,7 +90,6 @@ class Tensor(object):
 			coord_count *= x
 
 		coords = []
-		dims = len(self.shape) # number of dimensions
 		for i in range(coord_count):
 			# convert the integer to a coord in the space
 			coord = []
@@ -232,6 +232,14 @@ class Tensor(object):
 				return res
 			return Tensor(res) # same as above, should be a matrix or array when appropriate.
 
+	def dot(self, other):
+		dim1 = self.dims
+		dim2 = other.dims
+		if not (dim1 in [1, 2] and dim2 in [1, 2]):
+			# it would be better to generalize to arbitrary dims but not now.
+			raise ValueError("Dot product only supported for 1D and 2D Tensors for now.")
+		raise NotImplementedError("")
+
 	def mean(self):
 		s = 0.
 		n = 0
@@ -256,12 +264,12 @@ class Tensor(object):
 class Matrix(Tensor):
 	def __init__(self, values=None):
 		Tensor.__init__(self, values=values)
-		if not len(self.shape) == 2:
+		if self.dims != 2:
 			raise ValueError("Matrices must be 2D, found shape: {}".format(self.shape))
 
 class Array(Tensor):
 	def __init__(self, values=None):
 		Tensor.__init__(self, values=values)
-		if not len(self.shape) == 1:
+		if self.dims != 1:
 			raise ValueError("Arrays must be 1D, found shape: {}".format(self.shape))
 

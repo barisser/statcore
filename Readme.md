@@ -7,3 +7,12 @@ This is purely for fun + education and should be used... at extreme personal ris
 I'm going to re-implement numpy arrays and matrices... just for fun.
 
 The usage of cython and c_extensions is completely recreational.
+
+
+
+# Algos
+
+PCA
+Linear Regression
+Matrix Inversion
+Logistic Regression

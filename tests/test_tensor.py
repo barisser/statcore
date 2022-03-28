@@ -50,6 +50,12 @@ def test_tensor():
 	assert (10*tensor1).std() == 8.16496580927726
 
 
-# def test_time():
-# 	tensor1 = statcore.Tensor([range(10**3) for _ in range(10**4)])
-# 	
+def test_generate_tensors():
+	tensor1 = statcore.zeros((10, 5, 3))
+	tensor2 = tensor1 + 2
+	tensor3 = statcore.random((10, 5, 3))
+	tensor4 = statcore.random((10, 5, 3))
+	assert tensor3 != tensor4
+	assert tensor2 - 2 == tensor1
+	assert tensor1[3, 1, 1] == 0
+	assert tensor3.std() > 0.1

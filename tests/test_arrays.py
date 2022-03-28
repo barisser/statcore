@@ -22,3 +22,5 @@ def test_array():
 	assert 1 + ar2 == ar2 + 1
 	assert ar2 / 10 == (1/10) * ar2
 	assert ar.shape == (3,)
+
+#def test_array_dot():
