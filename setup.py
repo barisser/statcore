@@ -9,14 +9,13 @@ setup(
     packages=find_packages(),
     ext_modules=cythonize(
         [
-        #    Extension(name="cfast", sources=["statcore/cfast.pyx"]),
+            Extension(name="table", sources=["statcore/table.pyx"]),
        #     Extension(name="fibz", sources=["statcore/fib.pyx"]),
         ],
         compiler_directives={'language_level' : "3"},
         annotate=True
-        ),# + [Extension(name="fastr", sources=["statcore/fastr.cpp"])],
+        ),# + [Extension(name="smath", sources=["statcore/math.cpp"])],
     zip_safe=False,
     install_requires=[
-        "numpy>=1.21.0",
         ],
     tests_require=['pytest-cov', 'pytest'])

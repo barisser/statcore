@@ -1,3 +1,5 @@
+import time
+
 import statcore
 
 
@@ -16,6 +18,13 @@ def test_get_shape_from_lists():
 	data4 = [data3] * 100
 	assert statcore.get_shape_from_lists(data4) == (100, 2, 3)
 
+
+def benchmark(func, *args, **kwargs):
+	start = time.time()
+	answer = func(*args, **kwargs)
+	t = time.time() - start
+	print("{} took {}".format(func.__name__, t))
+	return t, answer
 
 def test_tensor():
 	data1 = [[[[1,2,3]] * 4]*6]*7 # 4D tensor
@@ -39,3 +48,8 @@ def test_tensor():
 	assert tensor1.var() == 2./3
 	assert (tensor1 + 3).std() == 0.816496580927726
 	assert (10*tensor1).std() == 8.16496580927726
+
+
+# def test_time():
+# 	tensor1 = statcore.Tensor([range(10**3) for _ in range(10**4)])
+# 	

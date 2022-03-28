@@ -7,6 +7,7 @@ def test_array():
 	assert len(ar) == 3
 	assert ar == ar
 	ar2 = statcore.Array([7,8,9])
+	assert ar != ar2
 	assert ar + ar2 == statcore.Array([8, 12, 15])
 	assert ar2 - ar == statcore.Array([6, 4, 3])
 	assert ar * ar2 == statcore.Array([7, 32, 54])
@@ -20,4 +21,4 @@ def test_array():
 	assert 30 * ar2 == ar2 * 30
 	assert 1 + ar2 == ar2 + 1
 	assert ar2 / 10 == (1/10) * ar2
-	assert 1 / ar2 == ar2 ** -1
+	assert ar.shape == (3,)

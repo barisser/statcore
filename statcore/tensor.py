@@ -23,6 +23,9 @@ def get_shape_from_lists(data):
 			# above should be fixed eventually.  Current check only goes to depth=1.
 	return tuple(shape)
 
+def veryclose(a, b, tol=10**-9):
+	return abs(a-b) < tol
+
 def tensor_list_to_dict(values, shape):
 	count = 1
 	for x in shape:
@@ -98,13 +101,24 @@ class Tensor(object):
 			coords.append(tuple(coord))
 		return coords
 
+	def __len__(self):
+		return self.shape[0]
+
+	def __eq__(self, other):
+		if self.shape != other.shape:
+			return False
+		for k in self.all_coords():
+			if not veryclose(self[k], other[k]):
+				return False
+		return True
+
 	def __add__(self, other):
 		"""Add to another tensor or scalar value"""
 		if isinstance(other, Tensor):
 			self.check_shape_with_other(other)
 			newtensor = copy.deepcopy(self)
 			for k in self.all_coords():
-				newtensor[k] = v1 + other[k]
+				newtensor[k] = newtensor[k] + other[k]
 		elif isinstance(other, int) or isinstance(other, float):
 			newtensor = copy.deepcopy(self)
 			for k in self.all_coords():
@@ -114,17 +128,88 @@ class Tensor(object):
 	def __radd__(self, other):
 		return self + other
 
+	def __sub__(self, other):
+		return self + (-1 * other)
+
+	def __rsub__(self, other):
+		return self - other
+
 	def __mul__(self, other):
+		"""
+		Multiply a tensor by a scalar
+		or *elementwise* by another tensor with
+		the same shape.
+		"""
 		if isinstance(other, int) or isinstance(other, float):
 			newtensor = copy.deepcopy(self)
 			for k in self.all_coords():
 				newtensor[k] *= other
 			return newtensor
+		elif isinstance(other, Tensor):
+			self.check_shape_with_other(other)
+			newtensor = copy.deepcopy(self)
+			for k in self.all_coords():
+				newtensor[k] = self[k] * other[k]
+			return newtensor
 		else:
-			raise ValueError("This type not yet accepted.")
+			raise ValueError("This type not accepted.")
 
 	def __rmul__(self, other):
 		return self * other
+
+	def __truediv__(self, other):
+		"""
+		TrueDivide our tensor by a scalar
+		or elementwise by another tensor
+		of the same shape
+		"""
+		if isinstance(other, int) or isinstance(other, float):
+			newtensor = copy.deepcopy(self)
+			for k in self.all_coords():
+				newtensor[k] = self[k] / other
+			return newtensor
+		elif isinstance(other, Tensor):
+			self.check_shape_with_other(other)
+			newtensor = copy.deepcopy(self)
+			for k in self.all_coords():
+				if other[k] == 0:
+					raise ValueError("Cannot divide by zero.")
+				newtensor[k] = self[k] / other[k]
+			return newtensor
+		else:
+			raise ValueError("This type is not accepted.")
+
+	def __pow__(self, other):
+		"""
+		Elementwise power operations
+		"""
+		if not (isinstance(other, int) or isinstance(other, float)):
+			raise ValueError("Exponentiation must be by a scalar.")
+		newtensor = copy.deepcopy(self)
+		for k in self.all_coords():
+			newtensor[k] = self[k] ** other
+		return newtensor
+
+	def __mod__(self, other):
+		"""
+		Modulo our tensor by a scalar
+		or elementwise by another tensor of the same shape.
+		"""
+		newtensor = copy.deepcopy(self)
+		if isinstance(other, int) or isinstance(other, float):
+			for k in self.all_coords():
+				newtensor[k]= self[k] % other
+			return newtensor
+		elif isinstance(other, Tensor):
+			self.check_shape_with_other(other)
+			for k in self.all_coords():
+				if other[k] == 0:
+					raise ValueError("Cannot mod elementwise by zero.")
+				newtensor[k] = self[k] % other[k]
+			return newtensor
+		else:
+			raise ValueError("This type is not accepted.")
+
 
 	def __setitem__(self, k, v):
 		self.values = nested_list_modify(self.values, k, v)
@@ -161,4 +246,17 @@ class Tensor(object):
 			s += (self[k] - avg)**2
 			n += 1
 		return s / n
+
+
+class Matrix(Tensor):
+	def __init__(self, values=None):
+		Tensor.__init__(self, values=values)
+		if not len(self.shape) == 2:
+			raise ValueError("Matrices must be 2D, found shape: {}".format(self.shape))
+
+class Array(Tensor):
+	def __init__(self, values=None):
+		Tensor.__init__(self, values=values)
+		if not len(self.shape) == 1:
+			raise ValueError("Arrays must be 1D, found shape: {}".format(self.shape))
 
