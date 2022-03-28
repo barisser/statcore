@@ -74,6 +74,9 @@ class Tensor(object):
 			values = []
 		self.shape = get_shape_from_lists(values)
 		self.values = values
+		self.num_elements = 1
+		for x in self.shape:
+			self.num_elements *= x
 
 	def check_shape_with_other(self, other):
 		if not self.shape == other.shape:
@@ -100,6 +103,9 @@ class Tensor(object):
 
 			coords.append(tuple(coord))
 		return coords
+
+	def __repr__(self):
+ 		return "Tensor <num_elements={}, shape={}>".format(self.num_elements, self.shape)
 
 	def __len__(self):
 		return self.shape[0]
@@ -210,7 +216,6 @@ class Tensor(object):
 		else:
 			raise ValueError("This type is not accepted.")
 
-
 	def __setitem__(self, k, v):
 		self.values = nested_list_modify(self.values, k, v)
 
@@ -220,12 +225,12 @@ class Tensor(object):
 			if isinstance(data, int) or isinstance(data, float):
 				return data
 			else:
-				return Tensor(data)
+				return Tensor(data) # todo make this an array or matrix when appropriate, aesthetic change only
 		elif isinstance(k, tuple):
 			res = nested_list_lookup(self.values, k)
 			if isinstance(res, int) or isinstance(res, float):
 				return res
-			return Tensor(res)
+			return Tensor(res) # same as above, should be a matrix or array when appropriate.
 
 	def mean(self):
 		s = 0.
