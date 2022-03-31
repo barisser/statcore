@@ -23,4 +23,6 @@ def test_array():
 	assert ar2 / 10 == (1/10) * ar2
 	assert ar.shape == (3,)
 
-#def test_array_dot():
+	assert ar.dot(ar2) == 7+4*8+6*9
+
+	ar3 = statcore.Array([x for x in range(1000)])

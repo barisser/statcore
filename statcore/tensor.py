@@ -1,6 +1,8 @@
 import copy
 import itertools
 
+import statcore
+
 def get_shape_from_lists(data):
 	shape = []
 
@@ -55,6 +57,8 @@ def nested_list_lookup(llist, coords):
 
 def nested_list_modify(llist, key, value):
 	rets = []
+	if isinstance(key, int):
+		key = [key]
 	for n, x in enumerate(llist):
 		if n != key[0]:
 			rets.append(x)
@@ -75,6 +79,7 @@ class Tensor(object):
 		self.shape = get_shape_from_lists(values)
 		self.dims = len(self.shape)
 		self.values = values
+		#self.by_col = 
 		self.num_elements = 1
 		for x in self.shape:
 			self.num_elements *= x
@@ -238,7 +243,44 @@ class Tensor(object):
 		if not (dim1 in [1, 2] and dim2 in [1, 2]):
 			# it would be better to generalize to arbitrary dims but not now.
 			raise ValueError("Dot product only supported for 1D and 2D Tensors for now.")
+
+		if dim1 == dim2 == 1:
+			if not self.shape[0] == other.shape[0]:
+				raise ValueError("Incompatible array shapes for dot product: {} and {}".format(self.shape, other.shape))
+			s = 0
+			for i in range(self.shape[0]):
+				s += self.values[i] * other[i]
+			return s
+
+		if dim1 == 1 and dim2 == 2:
+			if not self.shape[0] == other.shape[0]:
+				raise ValueError("Incompatible shapes array dot matrix: {}, {}".format(self.shape, other.shape))
+			new_shape = (other.shape[0]),
+			zero_array = statcore.zeros(new_shape)
+			for lk in self.all_coords():
+				for colr in range(other.shape[1]):
+					rk = (lk[0], colr)
+					lv = self[lk]
+					rv = other[rk]
+					nv = lv * rv
+					zero_array[colr] += nv
+			return zero_array
+		elif dim1 == 2 and dim2 == 1:
+			return other.dot(self)
+		elif dim1 == dim2 == 2:
+			if not (self.shape[0] == other.shape[1] and self.shape[1] == other.shape[0]):
+				raise ValueError("Incompatible shapes of matrices: {}, {}".format(self.shape, other.shape))
+			new_shape = (other.shape[1], self.shape[0])
+			zero_matrix = statcore.zeros(new_shape)
+			for lk in self.all_coords():
+				for i in range(other.shape[1]):
+					rk = (lk[1], i)
+					nv = self[lk] * other[rk]
+					zero_matrix[(lk[0], i)] += nv
+#					import pdb;pdb.set_trace()
+			return zero_matrix
 		raise NotImplementedError("")
+
 
 	def mean(self):
 		s = 0.

@@ -13,3 +13,15 @@ def test_matrices():
 	mat6 = mat3 - mat2
 	assert mat6 == mat1
 	assert mat3[0][1] == 22
+
+	ar = statcore.Array([6,7])
+	mat7 = statcore.Matrix([[1, 2], [3, 4]])
+	v1 = 6*1 + 7*3
+	v2 = 6*2 + 7*4
+	assert ar.dot(mat7) == statcore.Array([v1, v2])
+
+	a = 1*1 + 2*3
+	b = 1*2 + 2 * 4
+	c = 3 * 1 + 4 * 3
+	d = 3 * 2 + 4 * 4
+	assert mat7.dot(mat7) == statcore.Matrix([[a, b], [c, d]])

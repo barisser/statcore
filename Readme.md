@@ -16,3 +16,4 @@ PCA
 Linear Regression
 Matrix Inversion
 Logistic Regression
+K-means
