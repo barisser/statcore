@@ -25,3 +25,7 @@ def test_matrices():
 	c = 3 * 1 + 4 * 3
 	d = 3 * 2 + 4 * 4
 	assert mat7.dot(mat7) == statcore.Matrix([[a, b], [c, d]])
+
+	mat8 = statcore.randint(100, (1000, 30))
+	mat9 = statcore.randint(100, (30, 70))
+	assert mat8.dot(mat9).shape == (1000, 70)

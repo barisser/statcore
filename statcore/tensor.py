@@ -268,7 +268,7 @@ class Tensor(object):
 		elif dim1 == 2 and dim2 == 1:
 			return other.dot(self)
 		elif dim1 == dim2 == 2:
-			if not (self.shape[0] == other.shape[1] and self.shape[1] == other.shape[0]):
+			if not self.shape[1] == other.shape[0]:
 				raise ValueError("Incompatible shapes of matrices: {}, {}".format(self.shape, other.shape))
 			new_shape = (other.shape[1], self.shape[0])
 			zero_matrix = statcore.zeros(new_shape)

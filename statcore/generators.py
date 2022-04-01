@@ -17,3 +17,9 @@ def random(shape):
 	for k in tensor.all_coords():
 		tensor[k]= stdrandom.random()
 	return tensor
+
+def randint(max, shape, min=0):
+	tensor = zeros(shape)
+	for k in tensor.all_coords():
+		tensor[k] = stdrandom.randint(min, max)
+	return tensor
