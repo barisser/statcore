@@ -6,7 +6,7 @@ class LinearRegressor(object):
 		self.coefficients = Array()
 		pass
 
-	def train(self, X, Y, loss='MSE'):
+	def train_mse(self, X, Y):
 		"""
 		Below is the derivation of the analytical linear regression fit.
 
@@ -46,7 +46,21 @@ class LinearRegressor(object):
 		XtXA = XtY -->
 		A = (XtX)^-1 * XtY.  This is our solution.
 		"""
-		return
+		#
+		# I dont yet support matrix inversion so lets do 
+		# gradient descent for now, using parts of the derivation above
+
+		def dlossda(X, Y):
+			import pdb;pdb.set_trace()
+
+
+
+	def train(self, X, Y, loss='MSE'):
+		if loss == 'MSE':
+			self.train_mse()
+		else:
+			raise ValueError("Loss type not supported: {}".format(loss))
+
 
 	def predict(self, X):
 		return self.coefficients.dot(X)

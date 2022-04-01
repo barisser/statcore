@@ -5,3 +5,4 @@
 from .tensor import get_shape_from_lists, Tensor, get_shape_from_keys, Array, Matrix
 from .generators import zeros, random, randint
 from .algos import k_means
+from .linear import LinearRegressor

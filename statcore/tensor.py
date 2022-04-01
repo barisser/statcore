@@ -71,6 +71,8 @@ def nested_list_modify(llist, key, value):
 
 class Tensor(object):
 	def __init__(self, values=None):
+		if values is None:
+			values = []
 		if not isinstance(values, list):
 			raise ValueError("Values must be a list")
 
@@ -237,6 +239,14 @@ class Tensor(object):
 				return res
 			return Tensor(res) # same as above, should be a matrix or array when appropriate.
 
+	def transpose(self):
+		if self.dims != 2:
+			raise ValueError("Cannot transpose dim!=2")
+		new_matrix = statcore.zeros((self.shape[1], self.shape[0]))
+		for x, y in self.all_coords():
+			new_matrix[y, x] = self[x, y]
+		return new_matrix
+
 	def dot(self, other):
 		dim1 = self.dims
 		dim2 = other.dims
@@ -255,7 +265,7 @@ class Tensor(object):
 		if dim1 == 1 and dim2 == 2:
 			if not self.shape[0] == other.shape[0]:
 				raise ValueError("Incompatible shapes array dot matrix: {}, {}".format(self.shape, other.shape))
-			new_shape = (other.shape[0]),
+			new_shape = (other.shape[1]),
 			zero_array = statcore.zeros(new_shape)
 			for lk in self.all_coords():
 				for colr in range(other.shape[1]):
@@ -266,18 +276,20 @@ class Tensor(object):
 					zero_array[colr] += nv
 			return zero_array
 		elif dim1 == 2 and dim2 == 1:
-			return other.dot(self)
+			"""
+			X * Y = (Yt*Xt)t
+			"""
+			return other.dot(self.transpose()) # dont call transpose on arrays
 		elif dim1 == dim2 == 2:
 			if not self.shape[1] == other.shape[0]:
 				raise ValueError("Incompatible shapes of matrices: {}, {}".format(self.shape, other.shape))
-			new_shape = (other.shape[1], self.shape[0])
+			new_shape = (self.shape[0], other.shape[1])
 			zero_matrix = statcore.zeros(new_shape)
 			for lk in self.all_coords():
 				for i in range(other.shape[1]):
 					rk = (lk[1], i)
 					nv = self[lk] * other[rk]
 					zero_matrix[(lk[0], i)] += nv
-#					import pdb;pdb.set_trace()
 			return zero_matrix
 		raise NotImplementedError("")
 
@@ -308,6 +320,8 @@ class Matrix(Tensor):
 		Tensor.__init__(self, values=values)
 		if self.dims != 2:
 			raise ValueError("Matrices must be 2D, found shape: {}".format(self.shape))
+
+	
 
 class Array(Tensor):
 	def __init__(self, values=None):

@@ -27,5 +27,7 @@ def test_matrices():
 	assert mat7.dot(mat7) == statcore.Matrix([[a, b], [c, d]])
 
 	mat8 = statcore.randint(100, (1000, 30))
-	mat9 = statcore.randint(100, (30, 70))
-	assert mat8.dot(mat9).shape == (1000, 70)
+	mat9 = statcore.randint(100, (30, 700))
+	assert mat8.dot(mat9).shape == (1000, 700)
+
+	assert mat7.transpose() == statcore.Matrix([[1, 3], [2, 4]])
