@@ -21,7 +21,7 @@ def test_kmeans_simple():
 def test_kmeans_complex():
 	ar = np.random.randint(0, 20, size=(1000, 20, 30)) + 20
 	model = statcore.KMeans(4)
-	model.fit(ar, n=5)
+	model.fit(ar, n=2)
 	resp = model.predict(ar)
 	assert len(resp) == 1000
 	assert max(resp) == 3

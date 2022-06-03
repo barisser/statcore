@@ -1,2 +1,2 @@
 from .algos import KMeans
-#from .linear import LinearRegressor
+from .linear import LinearRegressor
