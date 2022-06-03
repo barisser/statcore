@@ -8,6 +8,10 @@ def l2norm(tensor1, tensor2):
 	return np.sum(t3**2)
 
 class KMeans(object):
+	"""
+	Class that implements K-means clustering fitting and prediction.
+	Currently extremely slow.
+	"""
 	def __init__(self, clusters_n, distance_norm='l2'):
 		self.clusters_n = clusters_n
 
