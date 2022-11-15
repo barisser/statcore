@@ -17,4 +17,4 @@ PCA
 SVD
 Linear Regression
 Matrix Inversion
-Logistic Regression
+Logistic Regression 
